@@ -10,6 +10,7 @@ import {
 } from "typeorm";
 import bcrypt from "bcryptjs";
 import Post from "./Post";
+import Vote from "./Vote";
 @Entity("users")
 export class User {
   @Index()

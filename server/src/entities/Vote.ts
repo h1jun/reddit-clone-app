@@ -17,7 +17,7 @@ export default class Vote extends BaseEntity {
   user: User;
 
   @Column()
-  usename: string;
+  username: string;
 
   @Column({ nullable: true })
   postId: number;

@@ -12,6 +12,8 @@ import BaseEntity from "./Entity";
 import { User } from "./User";
 import Sub from "./Sub";
 import { makeid, slugify } from "../utils/helpers";
+import Vote from "./Vote";
+import Comment from "./Comment";
 @Entity("posts")
 export default class Post extends BaseEntity {
   @Index()
@@ -40,7 +42,7 @@ export default class Post extends BaseEntity {
   @JoinColumn({ name: "username", referencedColumnName: "username" })
   user: User;
 
-  @ManyToOne(() => Subs, (sub) => sub.posts)
+  @ManyToOne(() => Sub, (sub) => sub.posts)
   @JoinColumn({ name: "subName", referencedColumnName: "name" })
   sub: Sub;
 

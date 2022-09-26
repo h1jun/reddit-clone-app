@@ -9,6 +9,7 @@ import {
   BeforeInsert,
 } from "typeorm";
 import bcrypt from "bcryptjs";
+import Post from "./Post";
 @Entity("users")
 export class User {
   @Index()
@@ -28,8 +29,9 @@ export class User {
 
   // 관계 형성
   // Post :: 타입지정, post.user :: post 컬럼 안에 엔티티 지정
+  // 한 명의 유저가 많은 글을 올릴 수 있고 투표도 할 수 있어서 OneToMany
   @OneToMany(() => Post, (post) => post.user)
-  post: Post[];
+  posts: Post[];
 
   @OneToMany(() => Vote, (vote) => vote.user)
   votes: Vote[];

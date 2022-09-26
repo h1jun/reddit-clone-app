@@ -1,4 +1,4 @@
-import { Exclude, Expose } from "class-transformer/types/decorators";
+import { Exclude, Expose } from "class-transformer";
 import {
   BeforeInsert,
   Column,

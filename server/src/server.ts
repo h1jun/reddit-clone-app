@@ -1,9 +1,18 @@
 import { AppDataSource } from "./data-source";
 import express from "express";
 import morgan from "morgan";
+import authRoutes from "./routes/auth";
+import cors from "cors";
 
 // express 최상위 함수
 const app = express();
+const origin = "http://localhost:3000";
+
+app.use(
+  cors({
+    origin,
+  })
+);
 
 // app.use은 app에서 미들웨어를 넣어주는 것
 // express.json 미들웨어를 넣어주는 것.
@@ -13,6 +22,7 @@ app.use(morgan("dev")); // dev/sort/common/combined
 
 // app.get의 url로 접속을 하면 해당 블록의 코드를 실행
 app.get("/", (_, res) => res.send("running"));
+app.use("/api/auth", authRoutes);
 
 let port = 4000;
 // app.listen의 포트로 접속하면 해당 블록의 코드를 실행한다.

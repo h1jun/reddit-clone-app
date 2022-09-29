@@ -5,9 +5,9 @@ import axios from "axios";
 import { useRouter } from "next/router";
 
 const Register = () => {
-  const [email, setEmail] = useState<string>("");
-  const [username, setUsername] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
+  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const [errors, setErrors] = useState<any>({});
 
   let router = useRouter();
@@ -19,8 +19,8 @@ const Register = () => {
       const res = await axios.post("/auth/register", {
         // key와 value과 동일하면 생략 가능(email: email)
         email,
-        username,
         password,
+        username,
       });
 
       console.log("res", res);

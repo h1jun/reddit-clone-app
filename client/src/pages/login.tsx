@@ -3,6 +3,7 @@ import InputGroup from "../components/inputGroup";
 import axios from "axios";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import { useAuthDispath } from "../context/auth";
 
 function Login() {
   let router = useRouter();
@@ -10,11 +11,13 @@ function Login() {
   const [password, setPassword] = useState<string>("");
   const [errors, setErrors] = useState<any>({});
 
+  const dispath = useAuthDispath();
+
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
 
     try {
-      await axios.post(
+      const res = await axios.post(
         "/auth/login",
         {
           password,
@@ -24,6 +27,10 @@ function Login() {
           withCredentials: true,
         }
       );
+
+      // 백엔드에서 받아온 user 정보를 context에 저장
+      dispath("LOGIN", res.data?.user);
+      router.push("/");
     } catch (error: any) {
       console.log(error);
       setErrors(error.response.data || {});

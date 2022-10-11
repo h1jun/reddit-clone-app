@@ -3,6 +3,7 @@ import express from "express";
 import morgan from "morgan";
 import authRoutes from "./routes/auth";
 import cors from "cors";
+import dotenv from "dotenv";
 
 // express 최상위 함수
 const app = express();
@@ -11,6 +12,7 @@ const origin = "http://localhost:3000";
 app.use(
   cors({
     origin,
+    credentials: true,
   })
 );
 
@@ -19,6 +21,8 @@ app.use(
 // 리퀘스트에서 json 형태 파일을 보낼 때 express에서 받은 다음 사용하기 위해서
 app.use(express.json());
 app.use(morgan("dev")); // dev/sort/common/combined
+
+dotenv.config();
 
 // app.get의 url로 접속을 하면 해당 블록의 코드를 실행
 app.get("/", (_, res) => res.send("running"));

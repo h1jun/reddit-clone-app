@@ -93,7 +93,16 @@ const login = async (req: Request, res: Response) => {
     const token = jwt.sign({ username }, process.env.JWT_SECRET!);
 
     // 쿠키 저장
-    res.set("Set-Cookie", cookie.serialize("token", token));
+    res.set(
+      "Set-Cookie",
+      cookie.serialize("token", token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict",
+        maxAge: 60 * 60 * 24 * 7, // 1 week
+        path: "/",
+      })
+    );
 
     return res.json({ user, token });
   } catch (error: any) {

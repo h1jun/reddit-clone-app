@@ -1,10 +1,13 @@
 import { AppDataSource } from "./data-source";
 import express from "express";
 import morgan from "morgan";
+
 import authRoutes from "./routes/auth";
 import subRoutes from "./routes/subs";
+
 import cors from "cors";
 import dotenv from "dotenv";
+import cookieParser from "cookie-parser";
 
 // express 최상위 함수
 const app = express();
@@ -22,6 +25,7 @@ app.use(
 // 리퀘스트에서 json 형태 파일을 보낼 때 express에서 받은 다음 사용하기 위해서
 app.use(express.json());
 app.use(morgan("dev")); // dev/sort/common/combined
+app.use(cookieParser()); // cookie-parser, fe에서 보내주는 cookie를 받을 수  있다.
 
 dotenv.config();
 

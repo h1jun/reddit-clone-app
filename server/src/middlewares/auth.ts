@@ -2,7 +2,7 @@
 import { User } from "../entities/User";
 import { Request, Response, NextFunction } from "express";
 
-export default async (_: Request, res: Response, next: NextFunction) => {
+export default async (req: Request, res: Response, next: NextFunction) => {
   try {
     const user: User | undefined = res.locals.user;
 

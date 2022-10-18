@@ -1,9 +1,12 @@
 import { isEmpty, validate } from "class-validator";
-import { Request, response, Response, Router } from "express";
+import { Request, Response, Router } from "express";
 import { User } from "../entities/User";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import cookie from "cookie";
+
+import useMiddleware from "../middlewares/user";
+import authMiddleware from "../middlewares/auth";
 
 const mapErrors = (errors: Object[]) => {
   return errors.reduce((prev: any, err: any) => {
@@ -111,8 +114,14 @@ const login = async (req: Request, res: Response) => {
   }
 };
 
+const me = async (_: Request, res: Response) => {
+  // _를 사용하는 이유는 req를 사용하지 않을 때 _로 대체
+  return res.json(res.locals.user);
+};
+
 // /register 경로로 post요청으로 올 때는 register라는 핸들러를 이용
 const router = Router();
+router.get("/me", useMiddleware, authMiddleware, me); // 미들웨어 거쳐서 문제 없으면 me 핸들러로 이동
 router.post("/register", register); // /api/auth/register로 요청이 오면 register 핸들러 실행
 router.post("/login", login);
 

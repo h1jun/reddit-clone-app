@@ -2,6 +2,7 @@ import axios from "axios";
 import { useRouter } from "next/router";
 import { FormEvent, useState } from "react";
 import InputGroup from "../../components/inputGroup";
+import { GetServerSideProps } from "next";
 
 function SubCreate() {
   const [name, setName] = useState<string>("");
@@ -79,3 +80,22 @@ function SubCreate() {
   );
 }
 export default SubCreate;
+
+export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
+  try {
+    const cookie = req.headers.cookie; // 쿠키 가져오기
+
+    // 요청을 보낼 때 쿠키가 없다면 에러 보내기
+    if (!cookie) throw new Error("Missing auth token cookie");
+
+    // 쿠키가 있다면 그 쿠키를 이용해서 백엔드에서 인증 처리하기
+    await axios.get("/auth/me", { headers: { cookie } });
+
+    return { props: {} }; // 아무것도 안 넣어주기
+  } catch (error) {
+    // 백엔드에서 요청에서 던져준 쿠키를 이용해 인증 처리할 때 에러가 나면 /login 페이지로 이동
+    // 307 에러 코드는 에러시 임시적으로 url 이동
+    res.writeHead(307, { Location: "/login" }).end();
+    return { props: {} };
+  }
+};

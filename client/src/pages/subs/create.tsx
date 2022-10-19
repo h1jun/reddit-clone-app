@@ -94,7 +94,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
     return { props: {} }; // 아무것도 안 넣어주기
   } catch (error) {
     // 백엔드에서 요청에서 던져준 쿠키를 이용해 인증 처리할 때 에러가 나면 /login 페이지로 이동
-    // 307 에러 코드는 에러시 임시적으로 url 이동
+    // status code는 307 :: 에러시 임시적으로 url 이동
     res.writeHead(307, { Location: "/login" }).end();
     return { props: {} };
   }

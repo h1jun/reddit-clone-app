@@ -3,13 +3,16 @@ import InputGroup from "../components/inputGroup";
 import axios from "axios";
 import { useRouter } from "next/router";
 import Link from "next/link";
-import { useAuthDispath } from "../context/auth";
+import { useAuthDispath, useAuthState } from "../context/auth";
 
 function Login() {
-  let router = useRouter();
+  const router = useRouter();
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [errors, setErrors] = useState<any>({});
+
+  const { authenticated } = useAuthState();
+  if (authenticated) router.push("/"); // 로그인 된 경우 main 페이지로 이동
 
   const dispath = useAuthDispath();
 

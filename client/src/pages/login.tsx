@@ -3,7 +3,7 @@ import InputGroup from "../components/inputGroup";
 import axios from "axios";
 import { useRouter } from "next/router";
 import Link from "next/link";
-import { useAuthDispath, useAuthState } from "../context/auth";
+import { useAuthDispatch, useAuthState } from "../context/auth";
 
 function Login() {
   const router = useRouter();
@@ -14,7 +14,7 @@ function Login() {
   const { authenticated } = useAuthState();
   if (authenticated) router.push("/"); // 로그인 된 경우 main 페이지로 이동
 
-  const dispath = useAuthDispath();
+  const dispath = useAuthDispatch();
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();

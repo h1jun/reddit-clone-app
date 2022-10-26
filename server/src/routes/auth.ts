@@ -119,10 +119,24 @@ const me = async (_: Request, res: Response) => {
   return res.json(res.locals.user);
 };
 
+const logout = async (_: Request, res: Response) => {
+  res.set(
+    "Set-Cookie",
+    cookie.serialize("token", "", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      expires: new Date(0),
+      path: "/",
+    })
+  );
+  res.status(200).json({ success: true });
+};
+
 // /register 경로로 post요청으로 올 때는 register라는 핸들러를 이용
 const router = Router();
 router.get("/me", useMiddleware, authMiddleware, me); // 미들웨어 거쳐서 문제 없으면 me 핸들러로 이동
 router.post("/register", register); // /api/auth/register로 요청이 오면 register 핸들러 실행
 router.post("/login", login);
-
+router.post("/logout", useMiddleware, authMiddleware, logout);
 export default router;

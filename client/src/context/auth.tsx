@@ -62,7 +62,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     async function loadUser() {
       try {
         const res = await axios.get("/auth/me");
-        console.log("로그인 했는지 res : ", res);
         dispatch("LOGIN", res.data);
       } catch (error) {
         console.log(error);
@@ -81,4 +80,4 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 };
 
 export const useAuthState = () => useContext(StateContext);
-export const useAuthDispath = () => useContext(DispathContext);
+export const useAuthDispatch = () => useContext(DispathContext);

@@ -5,6 +5,7 @@ import { isEmpty } from "class-validator";
 import { AppDataSource } from "../data-source";
 import Sub from "../entities/Sub";
 import { User } from "../entities/User";
+import Post from "../entities/Post";
 
 const createSub = async (req: Request, res: Response, next: NextFunction) => {
   const { name, title, description } = req.body;
@@ -53,9 +54,32 @@ const createSub = async (req: Request, res: Response, next: NextFunction) => {
   // 저장한 정보 프론트엔드로 전달해주기
 };
 
+const topSubs = async (req: Request, res: Response) => {
+  console.log("진입2");
+  // 쿼리 날려주는 부분
+  try {
+    const imageUrlExp = `COALESCE('${process.env.APP_URL}/images/' ||s."imageUrn",'https://www.gravatar.com/avatar?d=mp&f=y')`;
+    const subs = await AppDataSource.createQueryBuilder()
+      .select(
+        `s.title, s.name, ${imageUrlExp} as "imageUrl", count(p.id) as "postCount"`
+      )
+      .from(Sub, "s")
+      .leftJoin(Post, "p", `s.name = p."subName"`)
+      .groupBy('s.title, s.name, "imageUrl"')
+      .orderBy(`"postCount"`, "DESC")
+      .limit(5)
+      .execute();
+    return res.json(subs); // FE 전달
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ error: "문제가 발생했습니다." });
+  }
+};
+
 const router = Router();
 // 미들웨어 연결
 // userMiddleware -> authMiddleware -> createSub 순으로 실행
 router.post("/", userMiddleware, authMiddleware, createSub);
+router.get("/sub/topSubs", topSubs);
 
 export default router;

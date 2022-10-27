@@ -26,7 +26,6 @@ const Register = () => {
         username,
       });
 
-      console.log("res", res);
       router.push("/login"); //login 페이지로 이동
     } catch (error: any) {
       console.log("error", error);

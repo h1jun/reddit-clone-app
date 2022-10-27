@@ -32,7 +32,7 @@ export default class Sub extends BaseEntity {
 
   // 외래키
   @Column()
-  usrname: string;
+  username: string;
 
   @ManyToOne(() => User)
   @JoinColumn({ name: "username", referencedColumnName: "username" })

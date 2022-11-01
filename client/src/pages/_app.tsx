@@ -17,6 +17,7 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   return (
     <AuthProvider>
+      {/* register, login 페이지가 아니면 NavBar show */}
       {!authRoute && <NavBar />}
       <div className={authRoute ? "" : "pt-16"}>
         <Component {...pageProps} />

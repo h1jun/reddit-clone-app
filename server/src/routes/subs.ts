@@ -141,6 +141,8 @@ const uploadSubImage = async (req: Request, res: Response) => {
         return res.status(400).json({ error: "유효하지 않은 파일" });
       }
 
+      // multer에 의해 캡슐화된 파일 객체에는 파일 경로가 있기 때문에
+      // dirname/pwd가 자동으로 추가됩니다.
       // 파일을 지워주기
       unlinkSync(req.file.path);
       return res.status(400).json({ error: "잘못된 유형" });
@@ -148,6 +150,7 @@ const uploadSubImage = async (req: Request, res: Response) => {
 
     let oldImageUrn: string = "";
 
+    // 이미지가 등록되어 있는데 새로운 이미지 등록 시 이전 이미지 삭제하는 로직
     if (type === "image") {
       // 사용중인 Urn 을 저장합니다. (이전 파일을 아래서 삭제하기 위해서)
       oldImageUrn = sub.imageUrn || "";
@@ -157,10 +160,12 @@ const uploadSubImage = async (req: Request, res: Response) => {
       oldImageUrn = sub.bannerUrn || "";
       sub.bannerUrn = req.file?.filename || "";
     }
-    await sub.save();
+    await sub.save(); // 이미지 이름 저장
 
     // 사용하지 않는 이미지 파일 삭제
     if (oldImageUrn !== "") {
+      // 데이터베이스는 파일 이름일 뿐이므로 개체 경로 접두사를 직접 추가해야한다.
+      // Linux 및 Windows와 호환
       const fullFilename = path.resolve(
         process.cwd(),
         "public",

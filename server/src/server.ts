@@ -34,6 +34,8 @@ app.get("/", (_, res) => res.send("running"));
 app.use("/api/auth", authRoutes);
 app.use("/api/subs", subRoutes);
 
+app.use(express.static("public")); // static 파일들이 public 폴더 안에 있다고 알려주기
+
 let port = 4000;
 // app.listen의 포트로 접속하면 해당 블록의 코드를 실행한다.
 app.listen(port, async () => {

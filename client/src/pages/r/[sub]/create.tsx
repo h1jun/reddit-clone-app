@@ -1,18 +1,40 @@
 import React, { useState } from "react";
 import { GetServerSideProps } from "next";
 import axios from "axios";
+import { FormEvent } from "react";
+import { useRouter } from "next/router";
+import { Post } from "../../../types";
 
 const PostCreate = () => {
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
+
+  const router = useRouter();
+  const { sub: subName } = router.query;
+
+  const submitPost = async (e: FormEvent) => {
+    e.preventDefault();
+
+    if (title.trim() === "" || !subName) return; // title이 없거나 sub  커뮤니티 이름이 없으면 return
+
+    try {
+      const { data: post } = await axios.post<Post>("/posts/", {
+        title: title.trim(), // 공백제거
+        body,
+        sub: subName,
+      });
+      router.push(`/r/${subName}/${post.identifier}/${post.slug}`);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <div className="flex flex-col justify-center pt-16">
       <div className="w-10/12 mx-auto md:w-96">
         <div className="p-4 bg-white rounded">
           <h1 className="mb-3 text-lg">포스트 생성하기</h1>
-          <form
-          //   onSubmit={submitPost}
-          >
+          <form onSubmit={submitPost}>
             <div className="relative mb-2">
               <input
                 type="text"

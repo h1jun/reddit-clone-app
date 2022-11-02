@@ -4,6 +4,8 @@ import Axios from "axios";
 import { AuthProvider } from "../context/auth";
 import { useRouter } from "next/router";
 import { NavBar } from "../components/NavBar";
+import { SWRConfig } from "swr";
+import axios from "axios";
 
 function MyApp({ Component, pageProps }: AppProps) {
   // axios를 이용해서 요청 보내는 모든 baseURL 경로 지정
@@ -15,14 +17,29 @@ function MyApp({ Component, pageProps }: AppProps) {
   const authRoutes = ["/register", "/login"];
   const authRoute = authRoutes.includes(pathname);
 
+  const fetcher = async (url: string) => {
+    try {
+      const res = await axios.get(url);
+      return res.data;
+    } catch (error: any) {
+      throw error.response.data;
+    }
+  };
+
   return (
-    <AuthProvider>
-      {/* register, login 페이지가 아니면 NavBar show */}
-      {!authRoute && <NavBar />}
-      <div className={authRoute ? "" : "pt-16"}>
-        <Component {...pageProps} />
-      </div>
-    </AuthProvider>
+    <SWRConfig
+      value={{
+        fetcher,
+      }}
+    >
+      <AuthProvider>
+        {/* register, login 페이지가 아니면 NavBar show */}
+        {!authRoute && <NavBar />}
+        <div className={authRoute ? "" : "pt-16"}>
+          <Component {...pageProps} />
+        </div>
+      </AuthProvider>
+    </SWRConfig>
   );
 }
 

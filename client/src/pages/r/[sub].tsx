@@ -12,25 +12,10 @@ const SubPage = () => {
   const { authenticated, user } = useAuthState();
   const router = useRouter();
 
-  /**
-   * @name 입력 받은 url로 data 가져오는 fetcher 함수
-   */
-  const fetcher = async (url: string) => {
-    try {
-      const res = await axios.get(url);
-      return res.data;
-    } catch (error: any) {
-      throw error.response.data;
-    }
-  };
-
   const subName = router.query.sub; // [sub]으로 했기 때문에 sub으로 들어옴
 
   // SWR을 사용하여 서버 data 가져오기
-  const { data: sub, error } = useSWR(
-    subName ? `/subs/${subName}` : null,
-    fetcher
-  );
+  const { data: sub, error } = useSWR(subName ? `/subs/${subName}` : null);
   console.log("sub : ", sub);
 
   // 이미지 업로드
